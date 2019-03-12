@@ -37,7 +37,7 @@ defmodule CrankWheel do
         http_method,
         _url(client, path),
         body,
-        headers ++ _authorization_header(client)
+        headers ++ _headers(client)
       )
 
     case response do
@@ -53,7 +53,10 @@ defmodule CrankWheel do
       {:ok, %HTTPoison.Response{status_code: 404, body: b}} ->
         b |> JSX.decode!()
 
-      {:error, %HTTPoison.Error{reason: reason}} ->
+      {:ok, %HTTPoison.Response{status_code: 500, body: b}} ->
+        b |> JSX.decode!()
+
+      {:error, _} ->
         response
     end
   end
@@ -63,8 +66,8 @@ defmodule CrankWheel do
     endpoint <> path
   end
 
-  @spec _authorization_header(Client.t()) :: keyword
-  def _authorization_header(%Client{api_key: api_key}) do
-    [{"Authorization", "Basic #{api_key}"}]
+  @spec _headers(Client.t()) :: keyword
+  def _headers(%Client{api_key: api_key}) do
+    [{"Authorization", "Basic #{api_key}"}] ++ @user_agent
   end
 end

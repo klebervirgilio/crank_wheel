@@ -39,8 +39,8 @@ defmodule CrankWheel.Company.User do
     ])
   end
 
-  @spec remove(Client.t(), binary) :: map
-  def remove(client, email) do
+  @spec destroy(Client.t(), binary) :: map
+  def destroy(client, email) do
     delete("#{@path}/#{email}", client)
   end
 end

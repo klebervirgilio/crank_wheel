@@ -9,29 +9,25 @@ defmodule CrankWheel do
   @spec get(binary, Client.t()) :: response
   @spec get(binary, Client.t(), keyword) :: response
   def get(path, client, headers \\ []) do
-    _request(:get, path, client, nil, headers)
+    _request(:get, path, client, "", headers)
   end
 
-  @spec get(binary, Client.t()) :: response
-  @spec get(binary, Client.t(), keyword) :: response
-  def post(path, client, headers \\ []) do
-    _request(:post, path, client, nil, headers)
+  @spec post(binary, Client.t(), any) :: response
+  @spec post(binary, Client.t(), any, keyword) :: response
+  def post(path, client, body, headers \\ []) do
+    _request(:post, path, client, body, headers)
   end
 
-  @spec get(binary, Client.t()) :: response
-  @spec get(binary, Client.t(), keyword) :: response
-  def patch(path, client, headers \\ []) do
-    _request(:patch, path, client, nil, headers)
+  @spec patch(binary, Client.t(), any) :: response
+  @spec patch(binary, Client.t(), any, keyword) :: response
+  def patch(path, client, body, headers \\ []) do
+    _request(:patch, path, client, body, headers)
   end
 
-  @spec get(binary, Client.t()) :: response
-  @spec get(binary, Client.t(), keyword) :: response
+  @spec delete(binary, Client.t()) :: response
+  @spec delete(binary, Client.t(), keyword) :: response
   def delete(path, client, headers \\ []) do
-    _request(:delete, path, client, nil, headers)
-  end
-
-  @spec _request(atom, binary, Client.t(), any, keyword) :: response | map
-  def json_request() do
+    _request(:delete, path, client, "", headers)
   end
 
   @spec _request(atom, binary, Client.t(), any, keyword) :: response | map
@@ -52,7 +48,10 @@ defmodule CrankWheel do
         b |> JSX.decode!()
 
       {:ok, %HTTPoison.Response{status_code: 204, body: b}} ->
-        b
+        b |> JSX.decode!()
+
+      {:ok, %HTTPoison.Response{status_code: 404, body: b}} ->
+        b |> JSX.decode!()
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         response

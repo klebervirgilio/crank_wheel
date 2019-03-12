@@ -1,6 +1,5 @@
 defmodule CrankWheel.Account.Demos do
   import CrankWheel
-  alias CrankWheel.Client
 
   @path "/ss/api/demo_usage"
 

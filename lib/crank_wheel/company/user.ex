@@ -12,6 +12,7 @@ defmodule CrankWheel.Company.User do
         }
 
   @type update_body :: %{
+          email: binary,
           privileg: binary,
           in_demo_pool: boolean
         }
@@ -32,9 +33,9 @@ defmodule CrankWheel.Company.User do
     post(@path, client, json, [{"Content-Type", "application/json"}])
   end
 
-  @spec update(Client.t(), update_body) :: map
-  def update(client, body) do
-    patch(@path, client, %{user_access: body}, [
+  @spec update(Client.t(), binary, update_body) :: map
+  def update(client, email, body) do
+    patch("#{@path}/#{email}", client, %{user_access: body}, [
       {"Content-Type", "application/x-www-form-urlencoded"}
     ])
   end

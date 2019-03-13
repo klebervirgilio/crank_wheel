@@ -35,7 +35,8 @@ defmodule CrankWheel.Company.User do
 
   @spec update(Client.t(), binary, update_body) :: map
   def update(client, email, body) do
-    patch("#{@path}/#{email}", client, %{user_access: body}, [
+    json = %{user_access: body} |> JSX.encode!()
+    patch("#{@path}/#{email}", client, json, [
       {"Content-Type", "application/x-www-form-urlencoded"}
     ])
   end
